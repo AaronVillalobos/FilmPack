@@ -6,16 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    let dataContainer = DataContainer()
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            PackView()
+                .environment(dataContainer)
         }
+        .modelContainer(dataContainer.modelContainer)
         .padding()
+        .background(Color.jet)
     }
 }
 
