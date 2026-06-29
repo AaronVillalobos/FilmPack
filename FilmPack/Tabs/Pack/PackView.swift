@@ -16,8 +16,10 @@ struct PackView: View {
                 if packs.isEmpty {
                     ContentUnavailableView {
                         Label("No film packs yet!", systemImage: "exclamationmark.circle.fill")
+                            .foregroundStyle(Color.filmWhite)
                     } description: {
-                        Text("Create a FilmPack to start seeing your captured moments.")
+                        Text("Create a FilmPack to start seeing your Polaroids.")
+                            .foregroundStyle(Color.filmWhite)
                     }
                 }
             }
@@ -32,14 +34,39 @@ struct PackView: View {
                         PackEntryView()
                     }
                 }
+                
+                ToolbarItem(placement: .principal) {
+                    HStack (spacing: 8) {
+                        Text("FilmPack")
+                            .font(.system(size: 32, weight: .bold, design: .default))
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.oat)
+                            .padding(.top, 10)
+                    }
+                }
+                
             }
-            .navigationTitle("FilmPack")
+            .toolbarRole(.editor)
+            .defaultScrollAnchor(.bottom, for: .initialOffset)
+            .defaultScrollAnchor(.bottom, for: .sizeChanges)
+            .background(Color.jet)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     private var pathItems: some View {
         ForEach(packs) { pack in
-            Text(pack.title)
+            NavigationLink {
+                PackDetailView(pack: pack)
+            } label: {
+                 FilmShieldPackView(pack: pack)
+            }
+            .scrollTransition { content, phase in
+                content
+                    .opacity(phase.isIdentity ? 1 : 0)
+                    .scaleEffect(phase.isIdentity ? 1 : 0.8)
+                
+            }
         }
     }
 }
@@ -47,6 +74,7 @@ struct PackView: View {
 #Preview {
     PackView()
         .sampleDataContainer()
+        .modelContainer(for: [Pack.self])
 }
 
 #Preview("No film packs") {
