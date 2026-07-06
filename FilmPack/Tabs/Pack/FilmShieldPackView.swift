@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FilmShieldPackView: View {
     var pack: Pack
-    @State var layout: FilmShieldLayout = .standard
+    @State var layout: FilmShieldLayout = .large
     
     var body: some View {
         FilmShield(layout: layout, pack: pack) {
@@ -16,14 +16,14 @@ struct FilmShieldPackView: View {
         ZStack(alignment: .bottomLeading) {
             Color.clear
             contentStack()
-                .frame(maxWidth: 200)
+                .frame(maxWidth: 400)
                 .padding()
         }
         .foregroundStyle(.pacific)
     }
     
     private func contentStack() -> some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             Text(pack.title)
                 .font(.title3)
                 .bold()
