@@ -14,7 +14,6 @@ struct PackDetailView: View {
             Text(pack.title)
                 .font(.largeTitle)
                 .fontWeight(.semibold)
-                .padding()
                 .foregroundStyle(Color.pacific)
             
             ScrollView {
@@ -50,14 +49,14 @@ struct PackDetailView: View {
                 .padding(.bottom, 12)
             
             ScrollView (.horizontal, showsIndicators: false) {
-                LazyHStack (spacing: 12) {
+                LazyHStack (spacing: 8) {
                     ForEach(pack.images, id:\.self) { image in
                         Image(uiImage: image)
                             .resizable()
                             .scaledToFit()
                     }
                 }
-                .scrollTargetLayout()
+                .scrollTargetLayout(isEnabled: true)
             }
             .scrollTargetBehavior(.viewAligned)
             .frame(height: 450)
@@ -71,7 +70,6 @@ struct PackDetailView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()        
     }
 }
 
