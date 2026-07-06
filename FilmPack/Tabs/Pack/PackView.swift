@@ -3,7 +3,7 @@ import SwiftData
 
 struct PackView: View {
     @State private var showCreatePack = false
-    @Query(sort: \Pack.timeStamp)
+    @Query(sort: \Pack.timeStamp, order: .reverse)
     private var packs: [Pack]
     
     var body: some View {
