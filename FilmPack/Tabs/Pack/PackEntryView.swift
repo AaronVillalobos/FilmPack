@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import SwiftData
+import Combine
 
 struct PackEntryView: View {
     @State private var title : String = ""
@@ -19,18 +20,21 @@ struct PackEntryView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(DataContainer.self) private var dataContainer
     
+    let titleLimit = 20
+    let captionLimit = 50
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 contentStack
             }
-            .foregroundStyle(Color.filmWhite)
+            .foregroundStyle(Color.pacific)
             .scrollDismissesKeyboard(.interactively)
             .toolbar {
                 ToolbarItem(placement: .title) {
                     Text("Create a FilmPack")
                         .bold()
-                        .foregroundStyle(Color.filmWhite)
+                        .foregroundStyle(Color.pacific)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", systemImage: "xmark") {
@@ -63,10 +67,10 @@ struct PackEntryView: View {
                             // Don't dismiss
                         }
                     }
-                    .disabled(title.isEmpty)
+                    .disabled(title.isEmpty || imageData.isEmpty)
                 }
             }
-            .background(Color.pacific)
+            .background(Color.filmWhite)
         }
     }
     
@@ -116,13 +120,15 @@ struct PackEntryView: View {
     
     var contentStack: some View {
         VStack(alignment: .leading) {
+            PhotoPicker
             TextField(text: $title) {
                 Text("Title (Required)")
-                    .foregroundStyle(Color.filmWhite)
+                    .foregroundStyle(Color.pacific)
 
             }
             .font(.title.bold())
             .padding(.top, 48)
+            .onReceive(Just(title)) {_ in limitTitle(titleLimit)}
             
             Divider()
             
@@ -130,17 +136,30 @@ struct PackEntryView: View {
                 "",
                 text: $caption,
                 prompt: Text("Add a caption to your FilmPack")
-                    .foregroundStyle(Color.filmWhite)
+                    .foregroundStyle(Color.pacific)
                     .bold(),
                 axis: .vertical,
             )
                 .multilineTextAlignment(.leading)
                 .lineLimit(5...Int.max)
-                .foregroundStyle(Color.filmWhite)
+                .foregroundStyle(Color.pacific)
+                .onReceive(Just(caption)) {_ in limitCaption(captionLimit)}
+
             
-            PhotoPicker
         }
         .padding()
+    }
+    
+    func limitTitle(_ upper: Int) {
+        if title.count > upper {
+            title = String(title.prefix(upper))
+        }
+    }
+    
+    func limitCaption(_ upper: Int) {
+        if caption.count > upper {
+            caption = String(caption.prefix(upper))
+        }
     }
 }
 
